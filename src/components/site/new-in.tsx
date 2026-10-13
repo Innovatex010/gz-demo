@@ -102,7 +102,7 @@ export function NewIn() {
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
-              <ProductCard product={p} priority={i < 4} />
+              <ProductCard product={p} />
             </motion.div>
           ))}
         </AnimatePresence>

@@ -6,6 +6,7 @@ import { Header } from "@/components/site/header";
 import { Hero } from "@/components/site/hero";
 import { LooksSticky } from "@/components/site/looks-sticky";
 import { NewIn } from "@/components/site/new-in";
+import { RangeRail } from "@/components/site/range-rail";
 import { ShopAndOnline } from "@/components/site/shop-and-online";
 import { SizingAndFit } from "@/components/site/sizing-and-fit";
 
@@ -16,6 +17,7 @@ export default function Home() {
       <main>
         <Hero />
         <CategoryTiles />
+        <RangeRail />
         <NewIn />
         <EditorialBand />
         <LooksSticky />

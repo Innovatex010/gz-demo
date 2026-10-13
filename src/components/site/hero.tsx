@@ -7,13 +7,44 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
 import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
+import { type HeroFrame, HeroFrames } from "./hero-frames";
 import { HeadingLines, Load } from "./motion";
+
+/**
+ * Three frames, three different kinds of thing we sell — a shirt, a t-shirt and
+ * a trouser — so the picture says "range", not "one product".
+ */
+const HERO_FRAMES: HeroFrame[] = [
+  {
+    src: "/images/editorial/hero-shutter.webp",
+    productId: "GZ-104",
+    code: "GZ-104",
+    name: "Denim Chambray Shirt",
+    price: 1799,
+    position: "center 28%",
+  },
+  {
+    src: "/images/product/tee-white-outdoor.webp",
+    productId: "GZ-301",
+    code: "GZ-301",
+    name: "Heavyweight Cotton Tee",
+    price: 699,
+    position: "center 25%",
+  },
+  {
+    src: "/images/product/trouser-cream.webp",
+    productId: "GZ-502",
+    code: "GZ-502",
+    name: "Cream Linen Trouser",
+    price: 1899,
+    position: "center 30%",
+  },
+];
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -114,48 +145,25 @@ export function Hero() {
           </Load>
         </motion.div>
 
-        {/* The one image that carries the top of the page */}
+        {/* The pictures turn; the headline stays */}
         <motion.div
           style={{ y: imgY, opacity: fade }}
           className="relative lg:col-span-5"
         >
           <Load delay={0.16} y={40}>
-            <div className="relative aspect-4/5 overflow-hidden bg-[color:var(--paper-3)]">
-              <motion.div
-                initial={
-                  reduced ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }
-                }
-                animate={{ clipPath: "inset(0 0 0% 0)", opacity: 1 }}
-                transition={{
-                  duration: reduced ? 0.2 : 1.5,
-                  delay: 0.2,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src="/images/editorial/hero-shutter.webp"
-                  alt="A Good Zone full-sleeve shirt worn with trousers"
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 42vw"
-                  className="object-cover object-[center_28%]"
-                />
-              </motion.div>
-
-              {/* Caption strip pinned to the image — information, not decoration */}
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-[color:var(--ink)] px-4 py-3 text-[color:var(--paper)]">
-                <p className="text-[0.8rem]">
-                  <span className="num">GZ-104</span> Denim Chambray Shirt
-                </p>
-                <Link
-                  href="/shop/GZ-104"
-                  className="link-draw shrink-0 text-[0.8rem] font-medium"
-                >
-                  View
-                </Link>
-              </div>
-            </div>
+            <motion.div
+              initial={
+                reduced ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }
+              }
+              animate={{ clipPath: "inset(0 0 0% 0)", opacity: 1 }}
+              transition={{
+                duration: reduced ? 0.2 : 1.5,
+                delay: 0.2,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              <HeroFrames frames={HERO_FRAMES} />
+            </motion.div>
           </Load>
         </motion.div>
       </div>

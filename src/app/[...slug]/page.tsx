@@ -25,7 +25,7 @@ export default async function CatchAll({
   params: Promise<{ slug: string[] }>;
 }) {
   const { slug } = await params;
-  const path = "/" + slug.join("/");
+  const path = `/${slug.join("/")}`;
 
   return (
     <>
