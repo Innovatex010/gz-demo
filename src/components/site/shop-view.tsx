@@ -8,6 +8,22 @@ import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { ProductCard } from "@/components/site/product-card";
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   CATEGORIES,
   type CategoryId,
   categoryLabel,
@@ -150,24 +166,39 @@ export function ShopView() {
 
   return (
     <div className="shell py-10 lg:py-14">
-      <nav
-        aria-label="Breadcrumb"
-        className="text-[0.8rem] text-[color:var(--ink-3)]"
-      >
-        <Link href="/" className="link-draw">
-          Home
-        </Link>
-        <span className="mx-2 opacity-50">/</span>
-        <span className="text-[color:var(--ink-2)]">Shop</span>
-        {cats.length === 1 && (
-          <>
-            <span className="mx-2 opacity-50">/</span>
-            <span className="text-[color:var(--ink-2)]">
-              {categoryLabel(cats[0])}
-            </span>
-          </>
-        )}
-      </nav>
+      <Breadcrumb>
+        <BreadcrumbList className="text-[0.8rem] text-[color:var(--ink-3)]">
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/">Home</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/shop">Shop</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          {cats.length === 1 && (
+            <>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-[color:var(--ink-2)]">
+                  {categoryLabel(cats[0])}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </>
+          )}
+          {cats.length !== 1 && <BreadcrumbSeparator />}
+          {cats.length !== 1 && (
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-[color:var(--ink-2)]">
+                Shop everything
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          )}
+        </BreadcrumbList>
+      </Breadcrumb>
 
       <div className="mt-6 flex flex-wrap items-end justify-between gap-5 border-b border-[color:var(--line)] pb-6">
         <div>
@@ -181,14 +212,38 @@ export function ShopView() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setSheet(true)}
-            className="flex items-center gap-2 rounded-4xl border border-[color:var(--line-2)] px-4 py-2 text-[0.85rem] lg:hidden"
-          >
-            <IconAdjustmentsHorizontal size={16} stroke={1.6} />
-            Filters{active > 0 && ` (${active})`}
-          </button>
+          <Sheet open={sheet} onOpenChange={setSheet}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded-4xl border border-[color:var(--line-2)] px-4 py-2 text-[0.85rem] lg:hidden"
+              >
+                <IconAdjustmentsHorizontal size={16} stroke={1.6} />
+                Filters{active > 0 && ` (${active})`}
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="bottom"
+              className="max-h-[88svh] overflow-y-auto rounded-t-2xl border-[color:var(--line)] bg-[color:var(--paper)] p-0"
+            >
+              <SheetHeader className="border-b border-[color:var(--line)] px-6 py-5 text-left">
+                <SheetTitle className="t-h3">Filters</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Narrow the range by category, price and colour.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="px-6 py-6">
+                {Filters}
+                <button
+                  type="button"
+                  onClick={() => setSheet(false)}
+                  className="mt-8 w-full rounded-4xl bg-[color:var(--ink)] py-3.5 text-sm font-medium text-[color:var(--paper)]"
+                >
+                  Show {shown.length} {shown.length === 1 ? "piece" : "pieces"}
+                </button>
+              </div>
+            </SheetContent>
+          </Sheet>
 
           <label className="flex items-center gap-2 text-[0.85rem]">
             <span className="text-[color:var(--ink-3)]">Sort</span>
@@ -256,51 +311,6 @@ export function ShopView() {
           )}
         </div>
       </div>
-
-      {/* Filter sheet, small screens */}
-      <AnimatePresence>
-        {sheet && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] lg:hidden"
-          >
-            <button
-              type="button"
-              aria-label="Close filters"
-              onClick={() => setSheet(false)}
-              className="absolute inset-0 bg-black/40"
-            />
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-x-0 bottom-0 max-h-[85svh] overflow-y-auto bg-[color:var(--paper)] p-6"
-            >
-              <div className="mb-6 flex items-center justify-between">
-                <h2 className="t-h3">Filters</h2>
-                <button
-                  type="button"
-                  onClick={() => setSheet(false)}
-                  aria-label="Close"
-                >
-                  <IconX size={20} stroke={1.6} />
-                </button>
-              </div>
-              {Filters}
-              <button
-                type="button"
-                onClick={() => setSheet(false)}
-                className="mt-8 w-full rounded-4xl bg-[color:var(--ink)] py-3.5 text-sm font-medium text-[color:var(--paper)]"
-              >
-                Show {shown.length} {shown.length === 1 ? "piece" : "pieces"}
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

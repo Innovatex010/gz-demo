@@ -40,15 +40,20 @@ export function CategoryTiles() {
           href={lead.href}
           onMouseEnter={() => setHover(lead.id)}
           onMouseLeave={() => setHover(null)}
-          className="group relative overflow-hidden bg-[color:var(--paper-3)] md:col-span-2 lg:col-span-1 lg:row-span-2"
+          className="group relative block overflow-hidden bg-[color:var(--paper-3)] md:col-span-2 lg:col-span-1 lg:row-span-2"
         >
-          <Image
-            src={lead.image}
-            alt={lead.label}
-            fill
-            sizes="(max-width: 768px) 100vw, 34vw"
-            className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-105"
-          />
+          {/* The frame gives the fill image a height to resolve against. On
+              desktop the tile stretches over two rows, so it fills whatever
+              height the grid gives it. */}
+          <div className="relative aspect-4/5 lg:aspect-auto lg:h-full lg:min-h-0">
+            <Image
+              src={lead.image}
+              alt={lead.label}
+              fill
+              sizes="(max-width: 768px) 100vw, 34vw"
+              className="object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-105"
+            />
+          </div>
           <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-black/75 to-transparent p-5 pt-16 text-[color:var(--paper)]">
             <div>
               <h3 className="t-h3">{lead.label}</h3>

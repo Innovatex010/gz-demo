@@ -190,13 +190,16 @@
   font-weight: 400;
 }
 
-.t-hero {
+/* Banner headline. Sized for campaign copy rather than a fixed lockup, so a
+   new headline does not also need a type change to fit. */
+.t-banner {
   font-family: var(--font-sans), sans-serif;
   font-variation-settings: "wdth" 112;
   font-weight: 700;
-  font-size: clamp(2.75rem, 8.2vw, 7rem);
-  line-height: 0.92;
-  letter-spacing: -0.035em;
+  font-size: clamp(2.35rem, 6.2vw, 5.25rem);
+  line-height: 0.94;
+  letter-spacing: -0.032em;
+  color: var(--paper);
 }
 
 .t-h2 {
@@ -285,4 +288,28 @@
 .link-draw:hover::after,
 .link-draw[data-active="true"]::after {
   transform: scaleX(1);
+}
+
+/* ---------------------------------------------------------------------------
+   Marquee — the travel distance is measured at runtime and written to
+   --marquee-distance, so the loop closes exactly on repeat.
+   --------------------------------------------------------------------------- */
+
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--marquee-distance, 50%) * -1));
+  }
+}
+
+.animate-marquee {
+  animation: marquee-x linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
 }

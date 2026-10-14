@@ -1,10 +1,10 @@
 "use client";
 
 import { IconArrowRight } from "@tabler/icons-react";
-import { cn } from "cn";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CATEGORIES, type CategoryId, PRODUCTS } from "@/lib/catalog";
 import { HeadingLines } from "./motion";
 import { ProductCard } from "./product-card";
@@ -50,28 +50,19 @@ export function NewIn() {
         </Link>
       </div>
 
-      {/* Filters */}
-      <div
-        role="tablist"
-        aria-label="Filter products by category"
-        className="mt-10 flex flex-wrap gap-x-7 gap-y-3 border-b border-[color:var(--line)] pb-4"
+      {/* Filters — shadcn Tabs so the row gets real tab semantics and keyboard
+          arrow navigation without re-inventing them */}
+      <Tabs
+        value={filter}
+        onValueChange={(v) => setFilter(v as Filter)}
+        className="mt-10"
       >
-        {FILTERS.map((f) => {
-          const on = filter === f.id;
-          return (
-            <button
+        <TabsList className="h-auto flex-wrap justify-start gap-x-7 gap-y-3 rounded-none border-b border-[color:var(--line)] bg-transparent p-0">
+          {FILTERS.map((f) => (
+            <TabsTrigger
               key={f.id}
-              type="button"
-              role="tab"
-              aria-selected={on}
-              onClick={() => setFilter(f.id)}
-              className={cn(
-                "link-draw pb-0.5 text-[0.92rem] transition-colors",
-                on
-                  ? "font-medium text-[color:var(--ink)]"
-                  : "text-[color:var(--ink-3)] hover:text-[color:var(--ink-2)]",
-              )}
-              data-active={on}
+              value={f.id}
+              className="link-draw h-auto rounded-none px-0 pb-3 text-[0.92rem] font-normal text-[color:var(--ink-3)] shadow-none transition-colors hover:text-[color:var(--ink-2)] data-[state=active]:font-medium data-[state=active]:text-[color:var(--ink)]"
             >
               {f.label}
               <span className="num ml-1.5 text-[0.75rem] text-[color:var(--ink-3)]">
@@ -79,10 +70,10 @@ export function NewIn() {
                   ? PRODUCTS.length
                   : PRODUCTS.filter((p) => p.category === f.id).length}
               </span>
-            </button>
-          );
-        })}
-      </div>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
       <motion.div
         layout

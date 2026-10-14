@@ -2,10 +2,13 @@
 
 import { IconHeart, IconShoppingBagPlus } from "@tabler/icons-react";
 import { cn } from "cn";
-import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { inr, type Product } from "@/lib/catalog";
 
 export function ProductCard({
@@ -17,8 +20,9 @@ export function ProductCard({
   priority?: boolean;
   className?: string;
 }) {
+  const router = useRouter();
   const [hover, setHover] = useState(false);
-  const [added, setAdded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [wished, setWished] = useState(false);
 
   const onSale = typeof product.compareAt === "number";
@@ -33,11 +37,17 @@ export function ProductCard({
         href={`/shop/${product.id}`}
         className="relative block aspect-4/5 overflow-hidden bg-[color:var(--paper-3)]"
       >
+        {/* The frame is reserved up front, so nothing jumps when it lands */}
+        {!loaded && (
+          <Skeleton className="absolute inset-0 h-full w-full rounded-none" />
+        )}
+
         <Image
           src={product.image}
           alt={`${product.name} in ${product.colors[0].name}`}
           fill
           priority={priority}
+          onLoad={() => setLoaded(true)}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className={cn(
             "object-cover transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(.16,1,.3,1)]",
@@ -57,38 +67,46 @@ export function ProductCard({
         />
 
         {product.badge && (
-          <span
-            className={cn(
-              "label absolute top-3 left-3 px-2 py-1",
-              product.badge === "Last few left"
-                ? "bg-[color:var(--sale)] text-[color:var(--paper)]"
-                : "bg-[color:var(--paper)] text-[color:var(--ink)]",
-            )}
+          <Badge
+            variant={product.badge === "Last few left" ? "sale" : "default"}
+            className="absolute top-3 left-3"
           >
             {product.badge}
-          </span>
+          </Badge>
         )}
 
-        {/* Quick actions answer the hover — they slide in from the frame edge */}
+        {/* Quick actions answer the hover — they rise from the frame edge */}
         <div className="pointer-events-none absolute inset-x-2 bottom-2 hidden translate-y-3 gap-2 opacity-0 transition-[transform,opacity] duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover/card:translate-y-0 group-hover/card:opacity-100 md:flex">
           <button
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              setAdded(true);
+              toast.success(`${product.name} added to your bag`, {
+                description: `${inr(product.price)} · pick a size on the product page`,
+                action: {
+                  label: "View",
+                  onClick: () => router.push(`/shop/${product.id}`),
+                },
+              });
             }}
             className="pointer-events-auto flex flex-1 items-center justify-center gap-2 bg-[color:var(--paper)] py-3 text-[0.8rem] font-medium transition-colors hover:bg-[color:var(--ink)] hover:text-[color:var(--paper)]"
           >
             <IconShoppingBagPlus size={16} stroke={1.6} />
-            {added ? "Added to bag" : "Add to bag"}
+            Add to bag
           </button>
           <button
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              setWished((v) => !v);
+              const next = !wished;
+              setWished(next);
+              if (next) {
+                toast(`${product.name} saved for later`, {
+                  description: "You have 4 saved items.",
+                });
+              }
             }}
-            aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
+            aria-label={wished ? "Remove from wishlist" : "Save for later"}
             className={cn(
               "pointer-events-auto grid size-[42px] place-items-center transition-colors",
               wished
@@ -142,21 +160,6 @@ export function ProductCard({
           </span>
         </div>
       </div>
-
-      {/* Confirmation only when it happens — no permanent state row */}
-      <AnimatePresence>
-        {added && (
-          <motion.span
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="sr-only"
-            role="status"
-          >
-            {product.name} added to bag
-          </motion.span>
-        )}
-      </AnimatePresence>
     </article>
   );
 }

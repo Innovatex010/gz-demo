@@ -16,6 +16,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { ScrollProgress } from "@/components/ui/moving-line";
 import { Menu, MenuItem, ProductItem } from "@/components/ui/navbar-menu";
 import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
 
@@ -77,6 +78,7 @@ export function Header() {
           tight && "shadow-[0_1px_0_0_var(--line)]",
         )}
       >
+        <ScrollProgress className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[color:var(--indigo)]" />
         <div
           className={cn(
             "shell flex items-center justify-between gap-6 transition-[height] duration-500",

@@ -49,11 +49,12 @@ export function RangeRail() {
     offset: ["start start", "end end"],
   });
 
-  // A little weight in the rail so it arrives rather than snaps.
+  // Light. A heavy spring here reads as the rail dragging behind the wheel
+  // rather than being pulled by it.
   const smooth = useSpring(scrollYProgress, {
-    stiffness: 130,
-    damping: 32,
-    mass: 0.35,
+    stiffness: 260,
+    damping: 40,
+    mass: 0.2,
   });
   const x = useTransform(smooth, [0, 1], [0, -travel]);
   const fill = useTransform(smooth, [0, 1], ["0%", "100%"]);
@@ -120,7 +121,7 @@ export function RangeRail() {
       id="range"
       aria-label="Browse by category"
       className="border-t border-[color:var(--line)]"
-      style={scrub ? { height: `${PANELS.length * 90}svh` } : undefined}
+      style={scrub ? { height: `${PANELS.length * 52}svh` } : undefined}
     >
       <div className="lg:sticky lg:top-0 lg:flex lg:h-100svh lg:flex-col lg:overflow-hidden">
         <div className="shell pt-28 pb-4 lg:pt-32">

@@ -1,10 +1,11 @@
 "use client";
 
-import { IconArrowRight } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import { Button as StatefulButton } from "@/components/ui/stateful-button";
 import { CATEGORIES } from "@/lib/catalog";
 import { Fade } from "./motion";
 
@@ -56,10 +57,7 @@ export function Footer() {
         <div className="lg:col-span-7">
           <Fade>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (email.includes("@")) setSent(true);
-              }}
+              onSubmit={(e) => e.preventDefault()}
               className="flex flex-wrap items-end gap-3"
             >
               <div className="min-w-[16rem] flex-1">
@@ -84,13 +82,20 @@ export function Footer() {
               </div>
 
               <MagneticButton strength={0.2}>
-                <button
+                <StatefulButton
+                  id="newsletter"
                   type="submit"
-                  className="inline-flex items-center gap-2 rounded-4xl bg-[color:var(--paper)] px-6 py-3 text-sm font-medium text-[color:var(--ink)]"
+                  onClick={() => {
+                    if (email.includes("@")) {
+                      setSent(true);
+                      toast.success("You're on the restock list", {
+                        description: "We'll write when a size comes back.",
+                      });
+                    }
+                  }}
                 >
-                  {sent ? "You're on the list" : "Sign up"}
-                  {!sent && <IconArrowRight size={15} stroke={1.8} />}
-                </button>
+                  Sign up
+                </StatefulButton>
               </MagneticButton>
             </form>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, Bodoni_Moda } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const sans = Archivo({
@@ -25,10 +26,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${sans.variable} ${display.variable} antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[color:var(--paper)]">
         {children}
+        <Toaster />
       </body>
     </html>
   );

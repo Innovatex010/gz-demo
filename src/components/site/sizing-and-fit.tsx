@@ -30,7 +30,7 @@ export function SizingAndFit() {
       className="shell band border-t border-[color:var(--line)]"
     >
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-5">
+        <div className="min-w-0 lg:col-span-5">
           <HeadingLines
             as="h2"
             className="t-h2"
@@ -43,7 +43,7 @@ export function SizingAndFit() {
             size.
           </p>
 
-          <div className="mt-8 overflow-x-auto">
+          <div className="mt-8 min-w-0 overflow-x-auto">
             <table className="w-full min-w-[26rem] border-collapse text-left text-[0.88rem]">
               <caption className="sr-only">
                 Chest measurements by size, in inches
@@ -95,7 +95,7 @@ export function SizingAndFit() {
           </p>
         </div>
 
-        <div className="lg:col-span-7">
+        <div className="min-w-0 lg:col-span-7">
           <p className="label mb-6 text-[color:var(--ink-3)]">
             Ordering online, from people who like that
           </p>

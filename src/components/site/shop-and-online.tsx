@@ -72,8 +72,8 @@ export function ShopAndOnline() {
           <Reveal className="grid h-full grid-cols-2 gap-3">
             <div className="relative aspect-3/4 overflow-hidden bg-[color:var(--paper-3)]">
               <Image
-                src="/images/editorial/editorial-store.webp"
-                alt="Inside a Good Zone store"
+                src="/images/editorial/editorial-city.webp"
+                alt="Two people walking home past a Good Zone shutter"
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"
                 className="object-cover"
@@ -81,8 +81,8 @@ export function ShopAndOnline() {
             </div>
             <div className="relative aspect-3/4 overflow-hidden bg-[color:var(--paper-3)]">
               <Image
-                src="/images/editorial/editorial-coffee.webp"
-                alt="A Good Zone customer trying a shirt on in store"
+                src="/images/editorial/editorial-shop-interior.webp"
+                alt="Two people walking home past a Good Zone shutter"
                 fill
                 sizes="(max-width: 1024px) 50vw, 25vw"
                 className="object-cover"

@@ -6,8 +6,18 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import { ProductCard } from "@/components/site/product-card";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { categoryLabel, inr, type Product, SIZES } from "@/lib/catalog";
 
 const SIZE_NOTE: Record<string, string> = {
@@ -30,37 +40,54 @@ export function ProductDetail({
   const [colour, setColour] = useState(product.colors[0].name);
   const [size, setSize] = useState<string | null>(null);
   const [wished, setWished] = useState(false);
-  const [added, setAdded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const shots = [product.image, product.altImage];
 
   return (
     <div className="shell py-10">
-      <nav
-        aria-label="Breadcrumb"
-        className="text-[0.8rem] text-[color:var(--ink-3)]"
-      >
-        <Link href="/" className="link-draw">
-          Home
-        </Link>
-        <span className="mx-2 opacity-50">/</span>
-        <Link href="/shop" className="link-draw">
-          Shop
-        </Link>
-        <span className="mx-2 opacity-50">/</span>
-        <Link href={`/shop?c=${product.category}`} className="link-draw">
-          {categoryLabel(product.category)}
-        </Link>
-      </nav>
+      <Breadcrumb>
+        <BreadcrumbList className="text-[0.8rem] text-[color:var(--ink-3)]">
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/">Home</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/shop">Shop</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href={`/shop?c=${product.category}`}>
+                {categoryLabel(product.category)}
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage className="text-[color:var(--ink-2)]">
+              {product.name}
+            </BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
 
       <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-16">
         {/* Frames */}
         <div className="lg:col-span-7">
           <div className="relative aspect-4/5 overflow-hidden bg-[color:var(--paper-3)]">
+            {!loaded && (
+              <Skeleton className="absolute inset-0 h-full w-full rounded-none" />
+            )}
             <AnimateFrame
               key={shots[frame]}
               src={shots[frame]}
               alt={`${product.name}, view ${frame + 1}`}
+              onLoad={() => setLoaded(true)}
             />
             {product.badge && (
               <span className="label absolute top-4 left-4 bg-[color:var(--paper)] px-2 py-1">
@@ -165,11 +192,6 @@ export function ProductDetail({
                 </button>
               ))}
             </div>
-            {size && (
-              <p className="mt-2.5 text-[0.82rem] text-[color:var(--ink-2)]">
-                {size} — {SIZE_NOTE[size]}
-              </p>
-            )}
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -177,15 +199,14 @@ export function ProductDetail({
               <button
                 type="button"
                 disabled={!size}
-                onClick={() => setAdded(true)}
+                onClick={() =>
+                  toast.success(`${product.name} added to your bag`, {
+                    description: `${size} · ${colour} · ${inr(product.price)}`,
+                  })
+                }
                 className="inline-flex w-full items-center justify-center gap-2 rounded-4xl bg-[color:var(--ink)] px-8 py-4 text-sm font-medium text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-35 sm:w-auto"
               >
-                {added ? <IconCheck size={17} stroke={1.8} /> : null}
-                {added
-                  ? "Added to bag"
-                  : size
-                    ? `Add to bag — ${inr(product.price)}`
-                    : "Pick a size"}
+                {size ? `Add to bag — ${inr(product.price)}` : "Pick a size"}
               </button>
             </MagneticButton>
 
@@ -209,11 +230,11 @@ export function ProductDetail({
             </button>
           </div>
 
-          <output className="mt-3 block min-h-5 text-[0.83rem] text-[color:var(--ink-2)]">
-            {added
-              ? `${product.name} in ${size}, ${colour} is in your bag.`
-              : !size && "Pick a size to add this to your bag."}
-          </output>
+          <p className="mt-3 min-h-5 text-[0.83rem] text-[color:var(--ink-2)]">
+            {size
+              ? `${size} — ${SIZE_NOTE[size]}`
+              : "Pick a size to add this to your bag."}
+          </p>
 
           <ul className="mt-6 space-y-2.5 border-t border-[color:var(--line)] pt-6 text-[0.875rem]">
             <li className="flex items-start gap-2.5">
@@ -265,7 +286,15 @@ export function ProductDetail({
   );
 }
 
-function AnimateFrame({ src, alt }: { src: string; alt: string }) {
+function AnimateFrame({
+  src,
+  alt,
+  onLoad,
+}: {
+  src: string;
+  alt: string;
+  onLoad: () => void;
+}) {
   return (
     <motion.div
       key={src}
@@ -279,6 +308,7 @@ function AnimateFrame({ src, alt }: { src: string; alt: string }) {
         alt={alt}
         fill
         priority
+        onLoad={onLoad}
         sizes="(max-width: 1024px) 100vw, 55vw"
         className="object-cover"
       />
