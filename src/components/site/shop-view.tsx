@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { ProductCard } from "@/components/site/product-card";
+import { QuickViewHost, QuickViewProvider } from "@/components/site/quick-view";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -285,29 +286,34 @@ export function ShopView() {
               </button>
             </div>
           ) : (
-            <motion.div
-              layout
-              className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:gap-x-6"
-            >
-              <AnimatePresence mode="popLayout">
-                {shown.map((p, i) => (
-                  <motion.div
-                    key={p.id}
-                    layout
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.97 }}
-                    transition={{
-                      duration: 0.4,
-                      delay: Math.min(i, 8) * 0.03,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                  >
-                    <ProductCard product={p} priority={i < 6} />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
+            // Quick view needs its provider mounted once around the whole grid,
+            // not per card, or we get twenty dialogs with twenty focus traps.
+            <QuickViewProvider>
+              <motion.div
+                layout
+                className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:gap-x-6"
+              >
+                <AnimatePresence mode="popLayout">
+                  {shown.map((p, i) => (
+                    <motion.div
+                      key={p.id}
+                      layout
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.97 }}
+                      transition={{
+                        duration: 0.4,
+                        delay: Math.min(i, 8) * 0.03,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                    >
+                      <ProductCard product={p} priority={i < 6} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+              <QuickViewHost />
+            </QuickViewProvider>
           )}
         </div>
       </div>

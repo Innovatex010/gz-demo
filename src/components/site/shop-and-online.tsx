@@ -15,7 +15,7 @@ export function ShopAndOnline() {
   return (
     <section
       id="stores"
-      className="shell band border-t border-[color:var(--line)]"
+      className="shell py-10 lg:py-14 border-t border-[color:var(--line)]"
     >
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-6">

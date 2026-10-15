@@ -21,7 +21,7 @@ export function CategoryTiles() {
   const [lead, ...rest] = CATEGORIES;
 
   return (
-    <section className="shell band" id="categories">
+    <section className="shell py-10 lg:py-14" id="categories">
       <div className="flex flex-wrap items-end justify-between gap-6 border-b border-[color:var(--line)] pb-6">
         <HeadingLines
           as="h2"

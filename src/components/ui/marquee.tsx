@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
 import { cn } from "cn";
+import { type ReactNode, useEffect, useRef } from "react";
 
 /**
  * Marquee

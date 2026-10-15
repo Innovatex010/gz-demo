@@ -6,6 +6,7 @@ import { Footer } from "@/components/site/footer";
 import { Header } from "@/components/site/header";
 import { ProductDetail } from "@/components/site/product-detail";
 import { PRODUCTS, productById } from "@/lib/catalog";
+import { completeTheLook, relatedTo } from "@/lib/commerce";
 
 export function generateStaticParams() {
   return PRODUCTS.map((p) => ({ id: p.id }));
@@ -50,15 +51,13 @@ async function ProductBody({ params }: { params: Promise<{ id: string }> }) {
   const product = productById(id);
   if (!product) notFound();
 
-  // Same category first, then anything else — the row is a suggestion, not a
-  // strict "you might also like" claim.
-  const related = PRODUCTS.filter((p) => p.id !== product.id)
-    .sort((a, b) => {
-      const aSame = a.category === product.category ? 0 : 1;
-      const bSame = b.category === product.category ? 0 : 1;
-      return aSame - bSame;
-    })
-    .slice(0, 4);
+  // Same category first, then anything sharing a colourway. "Complete the
+  // look" is a different job — it deliberately crosses categories to fill in
+  // the rest of the outfit rather than showing more of the same thing.
+  const related = relatedTo(product, 4);
+  const complete = completeTheLook(product, 3);
 
-  return <ProductDetail product={product} related={related} />;
+  return (
+    <ProductDetail product={product} related={related} complete={complete} />
+  );
 }

@@ -15,13 +15,16 @@ import {
 } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ScrollProgress } from "@/components/ui/moving-line";
 import { Menu, MenuItem, ProductItem } from "@/components/ui/navbar-menu";
 import { CATEGORIES, PRODUCTS } from "@/lib/catalog";
+import { COLLECTIONS } from "@/lib/commerce";
+import { useStore } from "@/lib/stores";
 
 const NAV = [
-  { label: "New in", href: "/shop" },
+  { label: "New in", href: "/collections/new-arrivals" },
   { label: "Shirts", href: "/shop?c=full-sleeve" },
   { label: "T-shirts", href: "/shop?c=t-shirts" },
   { label: "Pants", href: "/shop?c=pants" },
@@ -29,13 +32,28 @@ const NAV = [
   { label: "Offers", href: "/#offers" },
 ];
 
+/** "1 item" / "3 items". Before the store hydrates we genuinely do not know
+    the count, so the label omits it rather than claiming an empty bag. */
+const countLabel = (what: string, v: number, ready: boolean) =>
+  ready ? `${what}, ${v} ${v === 1 ? "item" : "items"}` : what;
+
+const ACCOUNT_LINKS = [
+  { label: "Your bag", href: "/cart" },
+  { label: "Saved", href: "/wishlist" },
+  { label: "Compare", href: "/compare" },
+  { label: "Track an order", href: "/track-order" },
+];
+
 export function Header() {
+  const router = useRouter();
   const { scrollY } = useScroll();
   const [tight, setTight] = useState(false);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const [query, setQuery] = useState("");
+  const { cartCount, wishlist, hydrated } = useStore();
 
   useMotionValueEvent(scrollY, "change", (v) => setTight(v > 56));
 
@@ -120,6 +138,32 @@ export function Header() {
                 />
               ))}
             </MenuItem>
+            <MenuItem
+              item="Collections"
+              setActive={setActive}
+              active={active}
+              panelClassName="w-[26rem] rounded-sm border border-[color:var(--line-2)] bg-[color:var(--paper)] p-4 shadow-[0_24px_60px_-24px_rgba(0,0,0,.4)]"
+            >
+              <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+                {COLLECTIONS.map((c) => (
+                  <ProductItem
+                    key={c.slug}
+                    href={`/collections/${c.slug}`}
+                    title={c.title}
+                    description={c.blurb}
+                    flat={
+                      <Image
+                        src={c.image}
+                        alt=""
+                        width={48}
+                        height={60}
+                        className="size-12 object-cover"
+                      />
+                    }
+                  />
+                ))}
+              </div>
+            </MenuItem>
             {NAV.slice(1).map((n) => (
               <Link key={n.label} href={n.href} className="link-draw py-1">
                 {n.label}
@@ -136,23 +180,30 @@ export function Header() {
             >
               <IconSearch size={20} stroke={1.5} />
             </button>
-            <button
-              type="button"
-              aria-label="Wishlist"
-              className="hidden size-10 place-items-center transition-opacity hover:opacity-60 sm:grid"
+            <Link
+              href="/wishlist"
+              aria-label={countLabel("Saved", wishlist.length, hydrated)}
+              className="relative hidden size-10 place-items-center transition-opacity hover:opacity-60 sm:grid"
             >
               <IconHeart size={20} stroke={1.5} />
-            </button>
-            <button
-              type="button"
-              aria-label="Bag, 0 items"
+              {hydrated && wishlist.length > 0 && (
+                <span className="num absolute -top-0.5 -right-0.5 grid size-[18px] place-items-center rounded-full bg-[color:var(--indigo)] text-[0.6rem] text-[color:var(--paper)]">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
+            <Link
+              href="/cart"
+              aria-label={countLabel("Your bag", cartCount, hydrated)}
               className="relative grid size-10 place-items-center transition-opacity hover:opacity-60"
             >
               <IconShoppingBag size={20} stroke={1.5} />
-              <span className="num absolute -top-0.5 -right-0.5 grid size-[18px] place-items-center rounded-full bg-[color:var(--indigo)] text-[0.6rem] text-[color:var(--paper)]">
-                0
-              </span>
-            </button>
+              {hydrated && cartCount > 0 && (
+                <span className="num absolute -top-0.5 -right-0.5 grid size-[18px] place-items-center rounded-full bg-[color:var(--indigo)] text-[0.6rem] text-[color:var(--paper)]">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
             <button
               type="button"
               onClick={() => setOpen(true)}
@@ -174,7 +225,15 @@ export function Header() {
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="overflow-hidden border-t border-[color:var(--line)]"
             >
-              <div className="shell flex items-center gap-4 py-5">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!query.trim()) return;
+                  setSearch(false);
+                  router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+                }}
+                className="shell flex items-center gap-4 py-5"
+              >
                 <IconSearch
                   size={20}
                   stroke={1.5}
@@ -182,8 +241,11 @@ export function Header() {
                 />
                 <input
                   ref={searchRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                   type="search"
                   placeholder="Search shirts, t-shirts, pants, trousers"
+                  aria-label="Search products"
                   className="w-full bg-transparent text-lg outline-none placeholder:text-[color:var(--ink-3)]"
                 />
                 <button
@@ -193,7 +255,7 @@ export function Header() {
                 >
                   <IconX size={20} stroke={1.5} />
                 </button>
-              </div>
+              </form>
               <div className="shell flex flex-wrap gap-x-6 gap-y-2 pb-5">
                 <span className="label text-[color:var(--ink-3)]">Popular</span>
                 {[
@@ -205,7 +267,8 @@ export function Header() {
                 ].map((s) => (
                   <Link
                     key={s}
-                    href={`/shop?q=${encodeURIComponent(s)}`}
+                    href={`/search?q=${encodeURIComponent(s)}`}
+                    onClick={() => setSearch(false)}
                     className="link-draw text-sm"
                   >
                     {s}
@@ -251,8 +314,12 @@ export function Header() {
               className="shell flex flex-1 flex-col justify-center gap-1 pb-24"
             >
               {[
+                { label: "Collections", href: "/collections" },
                 ...NAV,
                 ...CATEGORIES.map((c) => ({ label: c.label, href: c.href })),
+                { label: "About", href: "/about" },
+                { label: "Lookbook", href: "/lookbook" },
+                ...ACCOUNT_LINKS,
               ].map((n, i) => (
                 <motion.div
                   key={`${n.label}-${i}`}

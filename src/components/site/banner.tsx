@@ -194,7 +194,13 @@ export function Banner({ campaigns = CAMPAIGNS }: { campaigns?: Campaign[] }) {
                 </BannerPart>
               )}
 
-              <h1 key={campaign.id} className="t-banner mt-5 max-w-[44rem]">
+              {/* The creative is a dark ground, so every element in it declares
+                  paper explicitly rather than inheriting — .t-banner carries no
+                  colour of its own now, so this has to be stated here. */}
+              <h1
+                key={campaign.id}
+                className="t-banner mt-5 max-w-[44rem] text-[color:var(--paper)]"
+              >
                 {campaign.lines ? (
                   campaign.lines.map((line, i) => (
                     <span

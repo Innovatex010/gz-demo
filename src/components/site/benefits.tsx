@@ -95,7 +95,7 @@ export function Benefits() {
         </Marquee>
       </section>
 
-      <section className="shell band">
+      <section className="shell py-10 lg:py-14">
         <ul className="grid gap-px border border-[color:var(--line)] bg-[color:var(--line)] sm:grid-cols-2 lg:grid-cols-4">
           {PROPS.map(({ icon: Icon, title, body }) => (
             <li key={title} className="bg-[color:var(--paper)] p-6">

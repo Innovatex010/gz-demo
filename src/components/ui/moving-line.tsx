@@ -14,7 +14,11 @@ import { motion, useScroll, useSpring } from "motion/react";
  */
 export function ScrollProgress({ className }: { className?: string }) {
   const { scrollYProgress } = useScroll();
-  const width = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
+  const width = useSpring(scrollYProgress, {
+    stiffness: 140,
+    damping: 30,
+    mass: 0.3,
+  });
 
   return (
     <motion.div

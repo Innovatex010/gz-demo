@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Archivo, Bodoni_Moda } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { AccountProvider } from "@/lib/account";
+import { StoreProvider } from "@/lib/stores";
 import "./globals.css";
 
 const sans = Archivo({
@@ -30,7 +32,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${sans.variable} ${display.variable} antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[color:var(--paper)]">
-        {children}
+        <StoreProvider>
+          <AccountProvider>{children}</AccountProvider>
+        </StoreProvider>
         <Toaster />
       </body>
     </html>

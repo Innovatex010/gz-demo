@@ -59,7 +59,13 @@
   --paper-3: oklch(0.942 0.005 92);
   --ink: oklch(0.22 0.028 288);
   --ink-2: oklch(0.455 0.026 288);
-  --ink-3: oklch(0.625 0.02 288);
+  /* 0.52 rather than 0.625 on purpose. The lighter value rendered #878693 —
+     3.4:1 on the paper ground, under WCAG AA's 4.5:1 for normal text, and it
+     was carrying every bit of secondary copy on the site: breadcrumbs, fabric
+     notes, size labels, meta. Darkened until it clears AA on paper, paper-2,
+     paper-3 and sand, so the top of the grey ramp stays a usable hierarchy
+     (ink > ink-2 > ink-3) instead of a decorative one. */
+  --ink-3: oklch(0.52 0.02 288);
   --indigo: oklch(0.47 0.17 268);
   --sale: oklch(0.545 0.19 28);
   --sand: oklch(0.955 0.019 86);
@@ -191,7 +197,12 @@
 }
 
 /* Banner headline. Sized for campaign copy rather than a fixed lockup, so a
-   new headline does not also need a type change to fit. */
+   new headline does not also need a type change to fit.
+
+   No colour of its own: it inherits. The campaign banner sits inside .on-ink,
+   which already sets the paper colour, so this stays correct there — and it
+   stays legible when a page uses .t-banner on the paper ground, where a hard
+   --paper value would render type the same colour as its own background. */
 .t-banner {
   font-family: var(--font-sans), sans-serif;
   font-variation-settings: "wdth" 112;
@@ -199,7 +210,6 @@
   font-size: clamp(2.35rem, 6.2vw, 5.25rem);
   line-height: 0.94;
   letter-spacing: -0.032em;
-  color: var(--paper);
 }
 
 .t-h2 {

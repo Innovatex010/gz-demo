@@ -6,38 +6,49 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Button as StatefulButton } from "@/components/ui/stateful-button";
-import { CATEGORIES } from "@/lib/catalog";
+import { COLLECTIONS } from "@/lib/commerce";
 import { Fade } from "./motion";
 
 const COLUMNS = [
   {
     title: "Shop",
     links: [
-      { label: "New in", href: "/shop" },
-      ...CATEGORIES.map((c) => ({ label: c.label, href: c.href })),
+      { label: "All products", href: "/shop" },
+      { label: "Collections", href: "/collections" },
+      ...COLLECTIONS.map((c) => ({
+        label: c.title,
+        href: `/collections/${c.slug}`,
+      })),
     ],
   },
   {
     title: "Help",
     links: [
-      { label: "Shipping and delivery", href: "/help/shipping" },
-      { label: "Returns and exchange", href: "/help/returns" },
-      { label: "Track an order", href: "/help/track" },
+      { label: "Frequently asked", href: "/faq" },
+      { label: "Shipping and delivery", href: "/shipping-policy" },
+      { label: "Returns and exchange", href: "/returns-policy" },
+      { label: "Track an order", href: "/track-order" },
       { label: "Size guide", href: "/#fit" },
-      { label: "Contact us", href: "/help/contact" },
+      { label: "Contact us", href: "/contact" },
     ],
   },
   {
-    title: "About",
+    title: "You",
     links: [
-      { label: "Our stores", href: "/stores" },
-      { label: "How we make", href: "/about" },
-      { label: "Sustainability", href: "/about/sustainability" },
-      { label: "Careers", href: "/about/careers" },
+      { label: "Your bag", href: "/cart" },
+      { label: "Saved styles", href: "/wishlist" },
+      { label: "Compare", href: "/compare" },
+      { label: "Search", href: "/search" },
+    ],
+  },
+  {
+    title: "Good Zone",
+    links: [
+      { label: "About us", href: "/about" },
+      { label: "Lookbook", href: "/lookbook" },
     ],
   },
 ];
-
 export function Footer() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
@@ -126,7 +137,7 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-3 lg:col-span-7">
+        <div className="grid gap-8 sm:grid-cols-2 lg:col-span-7 lg:grid-cols-4">
           {COLUMNS.map((col) => (
             <nav key={col.title} aria-label={col.title}>
               <h3 className="label text-[color:var(--on-ink-muted)]">
@@ -154,13 +165,13 @@ export function Footer() {
       >
         <p>© 2026 Good Zone Clothing Pvt. Ltd.</p>
         <div className="flex flex-wrap gap-6">
-          <Link href="/legal/privacy" className="link-draw">
+          <Link href="/privacy-policy" className="link-draw">
             Privacy
           </Link>
-          <Link href="/legal/terms" className="link-draw">
+          <Link href="/terms" className="link-draw">
             Terms
           </Link>
-          <Link href="/legal/shipping" className="link-draw">
+          <Link href="/shipping-policy" className="link-draw">
             Shipping policy
           </Link>
         </div>

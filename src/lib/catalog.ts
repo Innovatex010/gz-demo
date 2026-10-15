@@ -13,19 +13,41 @@ export type Category = {
   image: string;
 };
 
+export type FitName = "Slim" | "Regular" | "Relaxed" | "Oversized";
+
+export type ProductColor = {
+  name: string;
+  hex: string;
+  /** Gallery frames for this colourway, in order. The first one leads. */
+  images: string[];
+};
+
 export type Product = {
   id: string;
   name: string;
   category: CategoryId;
   price: number;
   compareAt?: number;
-  colors: { name: string; hex: string }[];
+  colors: ProductColor[];
   image: string;
   /** Second frame — the hover swap on a product card. */
   altImage: string;
   badge?: "New in" | "Bestseller" | "Last few left";
   fabric: string;
   fit: string;
+
+  // ── variant-level data, added for the product page rebuild ──────────────
+  /** Sizes this style is actually cut in. A subset of SIZES. */
+  sizes: string[];
+  /** Units on hand, per size. Small runs, so these numbers are small. */
+  stock: Record<string, number>;
+  /** Fit family, for the fit-information block. */
+  fitName: FitName;
+  /** Body measurements of the model in the photography. */
+  model: { height: string; wears: string; chest: string; waist: string };
+  care: string;
+  /** Collection slugs this style belongs to. Filled in by COLLECTIONS. */
+  collections: string[];
 };
 
 export const CATEGORIES: Category[] = [
@@ -74,14 +96,51 @@ export const PRODUCTS: Product[] = [
     category: "full-sleeve",
     price: 1299,
     colors: [
-      { name: "White", hex: "#F2F0EA" },
-      { name: "Sky", hex: "#A8C4DE" },
+      {
+        name: "White",
+        hex: "#F2F0EA",
+        images: [
+          "/images/product/shirt-white-walk.webp",
+          "/images/product/shirt-chambray-seated.webp",
+          "/images/product/shirt-linen-relaxed.webp",
+          "/images/product/shirt-oxford-tie.webp",
+        ],
+      },
+      {
+        name: "Sky",
+        hex: "#A8C4DE",
+        images: [
+          "/images/product/shirt-oxford-tie.webp",
+          "/images/product/shirt-rose-pink.webp",
+          "/images/product/shirt-white-walk.webp",
+          "/images/product/shirt-chambray-seated.webp",
+        ],
+      },
     ],
     image: "/images/product/shirt-white-walk.webp",
     altImage: "/images/editorial/editorial-white-wall.webp",
     badge: "Bestseller",
     fabric: "Cotton oxford, 140 gsm",
     fit: "Regular. Size down for a slimmer line.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 3,
+      S: 1,
+      M: 1,
+      L: 0,
+      XL: 6,
+      XXL: 14,
+    },
+    fitName: "Slim",
+    model: {
+      height: "5 ft 10 in",
+      wears: "XL",
+      chest: '42"',
+      waist: '38"',
+    },
+    care: "Machine wash at 30\u00b0C. Reshape while damp and dry flat.",
+    collections: [],
   },
   {
     id: "GZ-103",
@@ -90,13 +149,50 @@ export const PRODUCTS: Product[] = [
     price: 1399,
     compareAt: 1799,
     colors: [
-      { name: "White", hex: "#F2F0EA" },
-      { name: "Navy", hex: "#2B3550" },
+      {
+        name: "White",
+        hex: "#F2F0EA",
+        images: [
+          "/images/product/shirt-oxford-tie.webp",
+          "/images/product/shirt-chambray-seated.webp",
+          "/images/product/shirt-linen-relaxed.webp",
+          "/images/product/shirt-white-walk.webp",
+        ],
+      },
+      {
+        name: "Navy",
+        hex: "#2B3550",
+        images: [
+          "/images/product/shirt-white-walk.webp",
+          "/images/product/shirt-rose-pink.webp",
+          "/images/product/shirt-oxford-tie.webp",
+          "/images/product/shirt-chambray-seated.webp",
+        ],
+      },
     ],
     image: "/images/product/shirt-oxford-tie.webp",
     altImage: "/images/editorial/editorial-city.webp",
     fabric: "Cotton poplin, 120 gsm",
     fit: "Slim through the chest and waist.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 1,
+      S: 11,
+      M: 4,
+      L: 0,
+      XL: 3,
+      XXL: 6,
+    },
+    fitName: "Regular",
+    model: {
+      height: "5 ft 9 in",
+      wears: "L",
+      chest: '40"',
+      waist: '36"',
+    },
+    care: "Machine wash cold with like colours. Do not bleach. Warm iron on the reverse.",
+    collections: [],
   },
   {
     id: "GZ-104",
@@ -104,13 +200,48 @@ export const PRODUCTS: Product[] = [
     category: "full-sleeve",
     price: 1799,
     colors: [
-      { name: "Indigo", hex: "#4A6489" },
-      { name: "Stone", hex: "#BFB4A0" },
+      {
+        name: "Indigo",
+        hex: "#4A6489",
+        images: [
+          "/images/product/shirt-chambray-seated.webp",
+          "/images/product/shirt-oxford-tie.webp",
+          "/images/product/shirt-linen-relaxed.webp",
+        ],
+      },
+      {
+        name: "Stone",
+        hex: "#BFB4A0",
+        images: [
+          "/images/product/shirt-white-walk.webp",
+          "/images/product/shirt-rose-pink.webp",
+          "/images/product/shirt-chambray-detail.webp",
+        ],
+      },
     ],
     image: "/images/product/shirt-chambray-seated.webp",
     altImage: "/images/product/shirt-chambray-detail.webp",
     fabric: "Yarn-dyed cotton, 140 gsm",
     fit: "Relaxed. Works over a tee.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 1,
+      S: 6,
+      M: 1,
+      L: 8,
+      XL: 2,
+      XXL: 3,
+    },
+    fitName: "Slim",
+    model: {
+      height: "5 ft 9 in",
+      wears: "L",
+      chest: '40"',
+      waist: '36"',
+    },
+    care: "Machine wash at 30\u00b0C. Reshape while damp and dry flat.",
+    collections: [],
   },
   {
     id: "GZ-105",
@@ -118,14 +249,51 @@ export const PRODUCTS: Product[] = [
     category: "full-sleeve",
     price: 1899,
     colors: [
-      { name: "Rose", hex: "#E6C3BE" },
-      { name: "Sand", hex: "#D8C7AE" },
+      {
+        name: "Rose",
+        hex: "#E6C3BE",
+        images: [
+          "/images/product/shirt-rose-pink.webp",
+          "/images/product/shirt-oxford-tie.webp",
+          "/images/product/shirt-linen-relaxed.webp",
+          "/images/product/shirt-white-walk.webp",
+        ],
+      },
+      {
+        name: "Sand",
+        hex: "#D8C7AE",
+        images: [
+          "/images/product/shirt-white-walk.webp",
+          "/images/product/shirt-chambray-seated.webp",
+          "/images/product/shirt-rose-pink.webp",
+          "/images/product/shirt-oxford-tie.webp",
+        ],
+      },
     ],
     image: "/images/product/shirt-rose-pink.webp",
     altImage: "/images/editorial/editorial-orange.webp",
     badge: "New in",
     fabric: "Linen-cotton, 160 gsm",
     fit: "Relaxed. Creases on purpose.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 3,
+      S: 8,
+      M: 11,
+      L: 4,
+      XL: 3,
+      XXL: 2,
+    },
+    fitName: "Regular",
+    model: {
+      height: "6 ft",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash cold with like colours. Do not bleach. Warm iron on the reverse.",
+    collections: [],
   },
   {
     id: "GZ-106",
@@ -133,13 +301,48 @@ export const PRODUCTS: Product[] = [
     category: "full-sleeve",
     price: 1699,
     colors: [
-      { name: "Chalk", hex: "#E8E4D8" },
-      { name: "Olive", hex: "#6E7355" },
+      {
+        name: "Chalk",
+        hex: "#E8E4D8",
+        images: [
+          "/images/product/shirt-linen-relaxed.webp",
+          "/images/product/shirt-oxford-tie.webp",
+          "/images/product/shirt-rose-pink.webp",
+        ],
+      },
+      {
+        name: "Olive",
+        hex: "#6E7355",
+        images: [
+          "/images/product/shirt-white-walk.webp",
+          "/images/product/shirt-chambray-seated.webp",
+          "/images/product/shirt-casual-sky.webp",
+        ],
+      },
     ],
     image: "/images/product/shirt-linen-relaxed.webp",
     altImage: "/images/product/shirt-casual-sky.webp",
     fabric: "Linen blend, 150 gsm",
     fit: "Relaxed. Straight hem.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 0,
+      S: 5,
+      M: 6,
+      L: 8,
+      XL: 1,
+      XXL: 1,
+    },
+    fitName: "Slim",
+    model: {
+      height: "6 ft",
+      wears: "L",
+      chest: '40"',
+      waist: '36"',
+    },
+    care: "Machine wash cold. Line dry in shade. Warm iron while slightly damp.",
+    collections: [],
   },
 
   // ── Half-sleeve ───────────────────────────────────────────────────────
@@ -149,14 +352,48 @@ export const PRODUCTS: Product[] = [
     category: "half-sleeve",
     price: 899,
     colors: [
-      { name: "Navy", hex: "#2C3A5C" },
-      { name: "Oxblood", hex: "#5C2B30" },
+      {
+        name: "Navy",
+        hex: "#2C3A5C",
+        images: [
+          "/images/product/shirt-polo-navy.webp",
+          "/images/product/shirt-blue-casual.webp",
+          "/images/product/shirt-polo-navy-trouser.webp",
+        ],
+      },
+      {
+        name: "Oxblood",
+        hex: "#5C2B30",
+        images: [
+          "/images/product/shirt-polo-navy-trouser.webp",
+          "/images/product/shirt-polo-navy.webp",
+          "/images/product/shirt-blue-casual.webp",
+        ],
+      },
     ],
     image: "/images/product/shirt-polo-navy.webp",
     altImage: "/images/product/shirt-polo-navy-trouser.webp",
     badge: "Bestseller",
     fabric: "Cotton pique, 220 gsm",
     fit: "Regular. Ribbed sleeve cuffs.",
+
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    stock: {
+      S: 8,
+      M: 6,
+      L: 3,
+      XL: 14,
+      XXL: 6,
+    },
+    fitName: "Slim",
+    model: {
+      height: "6 ft 1 in",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash cold with like colours. Do not bleach. Warm iron on the reverse.",
+    collections: [],
   },
   {
     id: "GZ-202",
@@ -164,13 +401,47 @@ export const PRODUCTS: Product[] = [
     category: "half-sleeve",
     price: 1099,
     colors: [
-      { name: "Navy", hex: "#2C3A5C" },
-      { name: "Chalk", hex: "#EDE9DF" },
+      {
+        name: "Navy",
+        hex: "#2C3A5C",
+        images: [
+          "/images/product/shirt-polo-navy-trouser.webp",
+          "/images/product/shirt-blue-casual.webp",
+          "/images/product/shirt-polo-navy.webp",
+        ],
+      },
+      {
+        name: "Chalk",
+        hex: "#EDE9DF",
+        images: [
+          "/images/product/shirt-polo-navy.webp",
+          "/images/product/shirt-polo-navy-trouser.webp",
+          "/images/product/shirt-blue-casual.webp",
+        ],
+      },
     ],
     image: "/images/product/shirt-polo-navy-trouser.webp",
     altImage: "/images/product/shirt-polo-navy.webp",
     fabric: "Cotton slub knit, 200 gsm",
     fit: "Regular.",
+
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    stock: {
+      S: 8,
+      M: 3,
+      L: 0,
+      XL: 5,
+      XXL: 1,
+    },
+    fitName: "Regular",
+    model: {
+      height: "5 ft 9 in",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash cold with like colours. Do not bleach. Warm iron on the reverse.",
+    collections: [],
   },
   {
     id: "GZ-203",
@@ -178,14 +449,46 @@ export const PRODUCTS: Product[] = [
     category: "half-sleeve",
     price: 1199,
     colors: [
-      { name: "Sky stripe", hex: "#9FC0D8" },
-      { name: "Sage stripe", hex: "#9AA98F" },
+      {
+        name: "Sky stripe",
+        hex: "#9FC0D8",
+        images: [
+          "/images/product/shirt-blue-casual.webp",
+          "/images/product/shirt-polo-navy-trouser.webp",
+        ],
+      },
+      {
+        name: "Sage stripe",
+        hex: "#9AA98F",
+        images: [
+          "/images/product/shirt-polo-navy.webp",
+          "/images/product/shirt-formal-grey.webp",
+        ],
+      },
     ],
     image: "/images/product/shirt-blue-casual.webp",
     altImage: "/images/product/shirt-formal-grey.webp",
     badge: "New in",
     fabric: "Cotton-linen, 140 gsm",
     fit: "Relaxed. Half button placket.",
+
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    stock: {
+      S: 11,
+      M: 5,
+      L: 2,
+      XL: 4,
+      XXL: 14,
+    },
+    fitName: "Regular",
+    model: {
+      height: "6 ft",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash cold on a gentle cycle. Do not tumble dry. Cool iron.",
+    collections: [],
   },
 
   // ── T-shirts ──────────────────────────────────────────────────────────
@@ -195,14 +498,51 @@ export const PRODUCTS: Product[] = [
     category: "t-shirts",
     price: 699,
     colors: [
-      { name: "White", hex: "#F4F2EC" },
-      { name: "Black", hex: "#1D1B22" },
+      {
+        name: "White",
+        hex: "#F4F2EC",
+        images: [
+          "/images/product/tee-white-outdoor.webp",
+          "/images/product/tee-black-fitted.webp",
+          "/images/product/tee-white-backpack.webp",
+          "/images/product/tee-white-back.webp",
+        ],
+      },
+      {
+        name: "Black",
+        hex: "#1D1B22",
+        images: [
+          "/images/product/tee-white-back.webp",
+          "/images/product/tee-olive.webp",
+          "/images/product/tee-white-outdoor.webp",
+          "/images/product/tee-black-fitted.webp",
+        ],
+      },
     ],
     image: "/images/product/tee-white-outdoor.webp",
     altImage: "/images/product/tee-white-back.webp",
     badge: "Bestseller",
     fabric: "220 gsm combed cotton",
     fit: "Regular. Ribbed collar, twin-needle hem.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 14,
+      S: 14,
+      M: 8,
+      L: 0,
+      XL: 5,
+      XXL: 5,
+    },
+    fitName: "Regular",
+    model: {
+      height: "5 ft 10 in",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash cold with like colours. Do not bleach. Warm iron on the reverse.",
+    collections: [],
   },
   {
     id: "GZ-302",
@@ -210,13 +550,48 @@ export const PRODUCTS: Product[] = [
     category: "t-shirts",
     price: 599,
     colors: [
-      { name: "White", hex: "#F4F2EC" },
-      { name: "Sage", hex: "#9AA98F" },
+      {
+        name: "White",
+        hex: "#F4F2EC",
+        images: [
+          "/images/product/tee-white-back.webp",
+          "/images/product/tee-black-fitted.webp",
+          "/images/product/tee-white-backpack.webp",
+        ],
+      },
+      {
+        name: "Sage",
+        hex: "#9AA98F",
+        images: [
+          "/images/product/tee-white-outdoor.webp",
+          "/images/product/tee-olive.webp",
+          "/images/product/tee-white-print.webp",
+        ],
+      },
     ],
     image: "/images/product/tee-white-back.webp",
     altImage: "/images/product/tee-white-print.webp",
     fabric: "180 gsm cotton",
     fit: "Regular.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 14,
+      S: 6,
+      M: 0,
+      L: 11,
+      XL: 1,
+      XXL: 11,
+    },
+    fitName: "Regular",
+    model: {
+      height: "6 ft",
+      wears: "XL",
+      chest: '42"',
+      waist: '38"',
+    },
+    care: "Machine wash cold on a gentle cycle. Do not tumble dry. Cool iron.",
+    collections: [],
   },
   {
     id: "GZ-303",
@@ -224,13 +599,50 @@ export const PRODUCTS: Product[] = [
     category: "t-shirts",
     price: 749,
     colors: [
-      { name: "Black", hex: "#1D1B22" },
-      { name: "Charcoal", hex: "#3A3A40" },
+      {
+        name: "Black",
+        hex: "#1D1B22",
+        images: [
+          "/images/product/tee-black-fitted.webp",
+          "/images/product/tee-white-back.webp",
+          "/images/product/tee-white-backpack.webp",
+          "/images/product/tee-white-outdoor.webp",
+        ],
+      },
+      {
+        name: "Charcoal",
+        hex: "#3A3A40",
+        images: [
+          "/images/product/tee-white-outdoor.webp",
+          "/images/product/tee-olive.webp",
+          "/images/product/tee-black-fitted.webp",
+          "/images/product/tee-white-back.webp",
+        ],
+      },
     ],
     image: "/images/product/tee-black-fitted.webp",
     altImage: "/images/product/tee-olive.webp",
     fabric: "Elastane blend, 200 gsm",
     fit: "Slim. Size up for a relaxed fit.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 0,
+      S: 2,
+      M: 8,
+      L: 6,
+      XL: 1,
+      XXL: 5,
+    },
+    fitName: "Oversized",
+    model: {
+      height: "5 ft 9 in",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash cold with like colours. Do not bleach. Warm iron on the reverse.",
+    collections: [],
   },
   {
     id: "GZ-304",
@@ -238,13 +650,50 @@ export const PRODUCTS: Product[] = [
     category: "t-shirts",
     price: 849,
     colors: [
-      { name: "Olive", hex: "#6E7355" },
-      { name: "Stone", hex: "#BFB4A0" },
+      {
+        name: "Olive",
+        hex: "#6E7355",
+        images: [
+          "/images/product/tee-olive.webp",
+          "/images/product/tee-white-back.webp",
+          "/images/product/tee-white-backpack.webp",
+          "/images/product/tee-white-outdoor.webp",
+        ],
+      },
+      {
+        name: "Stone",
+        hex: "#BFB4A0",
+        images: [
+          "/images/product/tee-white-outdoor.webp",
+          "/images/product/tee-black-fitted.webp",
+          "/images/product/tee-olive.webp",
+          "/images/product/tee-white-back.webp",
+        ],
+      },
     ],
     image: "/images/product/tee-olive.webp",
     altImage: "/images/product/tee-white-backpack.webp",
     fabric: "Slub cotton, 200 gsm",
     fit: "Regular. Chest pocket.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 14,
+      S: 0,
+      M: 4,
+      L: 2,
+      XL: 3,
+      XXL: 0,
+    },
+    fitName: "Regular",
+    model: {
+      height: "6 ft",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash at 30\u00b0C. Reshape while damp and dry flat.",
+    collections: [],
   },
   {
     id: "GZ-305",
@@ -252,14 +701,51 @@ export const PRODUCTS: Product[] = [
     category: "t-shirts",
     price: 649,
     colors: [
-      { name: "White", hex: "#F4F2EC" },
-      { name: "Sky", hex: "#A8C4DE" },
+      {
+        name: "White",
+        hex: "#F4F2EC",
+        images: [
+          "/images/product/tee-white-backpack.webp",
+          "/images/product/tee-white-back.webp",
+          "/images/product/tee-olive.webp",
+          "/images/product/tee-white-outdoor.webp",
+        ],
+      },
+      {
+        name: "Sky",
+        hex: "#A8C4DE",
+        images: [
+          "/images/product/tee-white-outdoor.webp",
+          "/images/product/tee-black-fitted.webp",
+          "/images/product/tee-white-backpack.webp",
+          "/images/product/tee-white-back.webp",
+        ],
+      },
     ],
     image: "/images/product/tee-white-backpack.webp",
     altImage: "/images/product/tee-white-outdoor.webp",
     badge: "Last few left",
     fabric: "Cotton jersey, 180 gsm",
     fit: "Regular.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 14,
+      S: 2,
+      M: 4,
+      L: 1,
+      XL: 8,
+      XXL: 2,
+    },
+    fitName: "Regular",
+    model: {
+      height: "5 ft 9 in",
+      wears: "L",
+      chest: '40"',
+      waist: '36"',
+    },
+    care: "Machine wash cold with like colours. Do not bleach. Warm iron on the reverse.",
+    collections: [],
   },
 
   // ── Pants ─────────────────────────────────────────────────────────────
@@ -269,14 +755,47 @@ export const PRODUCTS: Product[] = [
     category: "pants",
     price: 1399,
     colors: [
-      { name: "Cream", hex: "#E3DAC6" },
-      { name: "Olive", hex: "#6E7355" },
+      {
+        name: "Cream",
+        hex: "#E3DAC6",
+        images: [
+          "/images/product/pant-chino-cream.webp",
+          "/images/product/pant-cargo-sand.webp",
+        ],
+      },
+      {
+        name: "Olive",
+        hex: "#6E7355",
+        images: [
+          "/images/product/pant-cotton-brown.webp",
+          "/images/product/pant-detail-shoes.webp",
+        ],
+      },
     ],
     image: "/images/product/pant-chino-cream.webp",
     altImage: "/images/product/pant-detail-shoes.webp",
     badge: "Bestseller",
     fabric: "Cotton twill, 260 gsm",
     fit: "Slim. Mid rise, cropped length.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 8,
+      S: 1,
+      M: 4,
+      L: 11,
+      XL: 2,
+      XXL: 3,
+    },
+    fitName: "Regular",
+    model: {
+      height: "6 ft 1 in",
+      wears: "L",
+      chest: '40"',
+      waist: '36"',
+    },
+    care: "Machine wash at 30\u00b0C. Reshape while damp and dry flat.",
+    collections: [],
   },
   {
     id: "GZ-402",
@@ -284,13 +803,46 @@ export const PRODUCTS: Product[] = [
     category: "pants",
     price: 1499,
     colors: [
-      { name: "Chocolate", hex: "#5B463A" },
-      { name: "Charcoal", hex: "#3A3A40" },
+      {
+        name: "Chocolate",
+        hex: "#5B463A",
+        images: [
+          "/images/product/pant-cotton-brown.webp",
+          "/images/product/pant-cargo-sand.webp",
+        ],
+      },
+      {
+        name: "Charcoal",
+        hex: "#3A3A40",
+        images: [
+          "/images/product/pant-chino-cream.webp",
+          "/images/product/pant-denim-seated.webp",
+        ],
+      },
     ],
     image: "/images/product/pant-cotton-brown.webp",
     altImage: "/images/product/pant-denim-seated.webp",
     fabric: "Cotton twill, 280 gsm",
     fit: "Relaxed. Full length.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 2,
+      S: 14,
+      M: 4,
+      L: 4,
+      XL: 14,
+      XXL: 14,
+    },
+    fitName: "Slim",
+    model: {
+      height: "6 ft",
+      wears: "L",
+      chest: '40"',
+      waist: '36"',
+    },
+    care: "Machine wash at 30\u00b0C. Reshape while damp and dry flat.",
+    collections: [],
   },
   {
     id: "GZ-403",
@@ -298,14 +850,47 @@ export const PRODUCTS: Product[] = [
     category: "pants",
     price: 1699,
     colors: [
-      { name: "Sand", hex: "#CDBB9B" },
-      { name: "Black", hex: "#1D1B22" },
+      {
+        name: "Sand",
+        hex: "#CDBB9B",
+        images: [
+          "/images/product/pant-cargo-sand.webp",
+          "/images/product/pant-cotton-brown.webp",
+        ],
+      },
+      {
+        name: "Black",
+        hex: "#1D1B22",
+        images: [
+          "/images/product/pant-chino-cream.webp",
+          "/images/product/pant-detail-jeans.webp",
+        ],
+      },
     ],
     image: "/images/product/pant-cargo-sand.webp",
     altImage: "/images/product/pant-detail-jeans.webp",
     badge: "New in",
     fabric: "Ripstop cotton, 240 gsm",
     fit: "Relaxed. Six pockets.",
+
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    stock: {
+      XS: 2,
+      S: 5,
+      M: 2,
+      L: 2,
+      XL: 5,
+      XXL: 11,
+    },
+    fitName: "Relaxed",
+    model: {
+      height: "6 ft",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash cold. Line dry in shade. Warm iron while slightly damp.",
+    collections: [],
   },
 
   // ── Trousers ──────────────────────────────────────────────────────────
@@ -315,13 +900,45 @@ export const PRODUCTS: Product[] = [
     category: "trousers",
     price: 1799,
     colors: [
-      { name: "Charcoal", hex: "#3A3A40" },
-      { name: "Navy", hex: "#2B3550" },
+      {
+        name: "Charcoal",
+        hex: "#3A3A40",
+        images: [
+          "/images/product/trouser-formal-navy.webp",
+          "/images/product/trouser-formal-maroon.webp",
+        ],
+      },
+      {
+        name: "Navy",
+        hex: "#2B3550",
+        images: [
+          "/images/product/trouser-cream.webp",
+          "/images/product/trouser-formal-taupe.webp",
+        ],
+      },
     ],
     image: "/images/product/trouser-formal-navy.webp",
     altImage: "/images/product/trouser-cream.webp",
     fabric: "Poly-viscose suiting, 200 gsm",
     fit: "Mid rise, straight leg. Full length.",
+
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    stock: {
+      S: 8,
+      M: 2,
+      L: 1,
+      XL: 2,
+      XXL: 0,
+    },
+    fitName: "Regular",
+    model: {
+      height: "5 ft 9 in",
+      wears: "XL",
+      chest: '42"',
+      waist: '38"',
+    },
+    care: "Machine wash cold with like colours. Do not bleach. Warm iron on the reverse.",
+    collections: [],
   },
   {
     id: "GZ-502",
@@ -329,14 +946,50 @@ export const PRODUCTS: Product[] = [
     category: "trousers",
     price: 1899,
     colors: [
-      { name: "Cream", hex: "#E8E0CE" },
-      { name: "Sand", hex: "#D8C7AE" },
+      {
+        name: "Cream",
+        hex: "#E8E0CE",
+        images: [
+          "/images/product/trouser-cream.webp",
+          "/images/product/trouser-formal-maroon.webp",
+          "/images/product/trouser-formal-grey-coat.webp",
+          "/images/product/trouser-formal-navy.webp",
+        ],
+      },
+      {
+        name: "Sand",
+        hex: "#D8C7AE",
+        images: [
+          "/images/product/trouser-formal-navy.webp",
+          "/images/product/trouser-formal-taupe.webp",
+          "/images/product/trouser-cream.webp",
+          "/images/product/trouser-formal-maroon.webp",
+        ],
+      },
     ],
     image: "/images/product/trouser-cream.webp",
     altImage: "/images/product/trouser-formal-grey-coat.webp",
     badge: "New in",
     fabric: "Linen-blend, 220 gsm",
     fit: "Relaxed. Elasticated back waist.",
+
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    stock: {
+      S: 14,
+      M: 6,
+      L: 3,
+      XL: 6,
+      XXL: 14,
+    },
+    fitName: "Slim",
+    model: {
+      height: "6 ft 1 in",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash at 30\u00b0C. Reshape while damp and dry flat.",
+    collections: [],
   },
   {
     id: "GZ-503",
@@ -344,13 +997,49 @@ export const PRODUCTS: Product[] = [
     category: "trousers",
     price: 1699,
     colors: [
-      { name: "Wine", hex: "#5C2B30" },
-      { name: "Charcoal", hex: "#3A3A40" },
+      {
+        name: "Wine",
+        hex: "#5C2B30",
+        images: [
+          "/images/product/trouser-formal-maroon.webp",
+          "/images/product/trouser-cream.webp",
+          "/images/product/trouser-formal-grey-coat.webp",
+          "/images/product/trouser-formal-navy.webp",
+        ],
+      },
+      {
+        name: "Charcoal",
+        hex: "#3A3A40",
+        images: [
+          "/images/product/trouser-formal-navy.webp",
+          "/images/product/trouser-formal-taupe.webp",
+          "/images/product/trouser-formal-maroon.webp",
+          "/images/product/trouser-cream.webp",
+        ],
+      },
     ],
     image: "/images/product/trouser-formal-maroon.webp",
     altImage: "/images/product/trouser-formal-grey-coat.webp",
     fabric: "Wool-blend suiting, 230 gsm",
     fit: "Mid rise, slim through the thigh.",
+
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    stock: {
+      S: 3,
+      M: 11,
+      L: 4,
+      XL: 0,
+      XXL: 8,
+    },
+    fitName: "Slim",
+    model: {
+      height: "5 ft 9 in",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash cold. Line dry in shade. Warm iron while slightly damp.",
+    collections: [],
   },
   {
     id: "GZ-504",
@@ -358,13 +1047,49 @@ export const PRODUCTS: Product[] = [
     category: "trousers",
     price: 1599,
     colors: [
-      { name: "Stone", hex: "#BFB4A0" },
-      { name: "Black", hex: "#1D1B22" },
+      {
+        name: "Stone",
+        hex: "#BFB4A0",
+        images: [
+          "/images/product/trouser-formal-taupe.webp",
+          "/images/product/trouser-cream.webp",
+          "/images/product/trouser-bomber-charcoal.webp",
+          "/images/product/trouser-formal-navy.webp",
+        ],
+      },
+      {
+        name: "Black",
+        hex: "#1D1B22",
+        images: [
+          "/images/product/trouser-formal-navy.webp",
+          "/images/product/trouser-formal-maroon.webp",
+          "/images/product/trouser-formal-taupe.webp",
+          "/images/product/trouser-cream.webp",
+        ],
+      },
     ],
     image: "/images/product/trouser-formal-taupe.webp",
     altImage: "/images/product/trouser-bomber-charcoal.webp",
     fabric: "Cotton-poly twill, 250 gsm",
     fit: "Mid rise, tapered. Full length.",
+
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    stock: {
+      S: 6,
+      M: 8,
+      L: 11,
+      XL: 11,
+      XXL: 1,
+    },
+    fitName: "Regular",
+    model: {
+      height: "5 ft 10 in",
+      wears: "M",
+      chest: '38"',
+      waist: '34"',
+    },
+    care: "Machine wash cold. Line dry in shade. Warm iron while slightly damp.",
+    collections: [],
   },
 ];
 

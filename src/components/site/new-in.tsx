@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CATEGORIES, type CategoryId, PRODUCTS } from "@/lib/catalog";
 import { HeadingLines } from "./motion";
 import { ProductCard } from "./product-card";
+import { QuickViewHost, QuickViewProvider } from "./quick-view";
 
 type Filter = "all" | CategoryId;
 
@@ -75,29 +76,32 @@ export function NewIn() {
         </TabsList>
       </Tabs>
 
-      <motion.div
-        layout
-        className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 lg:gap-x-6"
-      >
-        <AnimatePresence mode="popLayout">
-          {shown.map((p, i) => (
-            <motion.div
-              key={p.id}
-              layout
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{
-                duration: 0.45,
-                delay: Math.min(i, 7) * 0.035,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-            >
-              <ProductCard product={p} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      <QuickViewProvider>
+        <motion.div
+          layout
+          className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 lg:gap-x-6"
+        >
+          <AnimatePresence mode="popLayout">
+            {shown.map((p, i) => (
+              <motion.div
+                key={p.id}
+                layout
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{
+                  duration: 0.45,
+                  delay: Math.min(i, 7) * 0.035,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+              >
+                <ProductCard product={p} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+        <QuickViewHost />
+      </QuickViewProvider>
 
       {shown.length === 0 && (
         <p className="mt-12 text-[0.95rem] text-[color:var(--ink-2)]">

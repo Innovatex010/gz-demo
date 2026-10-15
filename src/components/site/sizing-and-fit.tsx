@@ -27,7 +27,7 @@ export function SizingAndFit() {
   return (
     <section
       id="fit"
-      className="shell band border-t border-[color:var(--line)]"
+      className="shell py-10 lg:py-14 border-t border-[color:var(--line)]"
     >
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
         <div className="min-w-0 lg:col-span-5">
