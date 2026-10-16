@@ -29,7 +29,7 @@ const STEPS: Step[] = [
  */
 export function TrackOrder() {
   const params = useSearchParams();
-  const { orders, hydrated } = useAccount();
+  const { orders } = useAccount();
   const [id, setId] = useState(params.get("order") ?? "");
   const [phone, setPhone] = useState("");
   const [result, setResult] = useState<ReturnType<typeof lookupOrder>>();

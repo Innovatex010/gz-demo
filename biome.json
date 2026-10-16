@@ -13,8 +13,7 @@
       "!.next",
       "!dist",
       "!build",
-      "!src/components/ui",
-      "!opencode.json"
+      "!src/components/ui"
     ]
   },
   "formatter": {

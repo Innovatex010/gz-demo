@@ -118,8 +118,9 @@ export function SettingsView() {
   const [resetOpen, setResetOpen] = useState(false);
   const { name, tagline, email, phone, since } = shop;
 
-  const on = (key: keyof typeof shop) => (v: string) =>
-    setShop((s) => ({ ...s, [key]: v }));
+  const on =
+    (key: keyof typeof shop) => (e: React.ChangeEvent<HTMLInputElement>) =>
+      setShop((s) => ({ ...s, [key]: e.target.value }));
 
   const draftFor = (m: TeamMember) => ({
     id: m.id,
