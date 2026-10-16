@@ -12,7 +12,9 @@
       "!node_modules",
       "!.next",
       "!dist",
-      "!build"
+      "!build",
+      "!src/components/ui",
+      "!opencode.json"
     ]
   },
   "formatter": {

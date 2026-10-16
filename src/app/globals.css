@@ -251,6 +251,32 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Print — the paperwork
+   The order desk prints invoices, packing slips and summaries. Everything on
+   the desk is chrome; the sheet in the parcel is the only thing the printer
+   should see. `.doc-sheet` is marked on the document, so visibility hiding
+   keeps the printout clean without restyling the whole app.
+   --------------------------------------------------------------------------- */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .doc-sheet,
+  .doc-sheet * {
+    visibility: visible;
+  }
+  .doc-sheet {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    max-width: none;
+    border: none;
+    padding: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Motion
    --------------------------------------------------------------------------- */
 
