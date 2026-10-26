@@ -4,14 +4,14 @@
  * Tests the webhook endpoint by importing the route handler directly
  * and simulating HTTP requests.
  *
- * Run: npx tsx src/lib/test-webhook.ts
+ * Run: bun tests/test-webhook.ts
  */
 import "dotenv/config";
-import { createHmac } from "crypto";
+import { createHmac } from "node:crypto";
 import { eq } from "drizzle-orm";
-import { POST } from "../app/api/razorpay/webhook/route";
-import { order, orderEvent } from "../db/schema";
-import { db } from "./db/drizzle";
+import { POST } from "@/app/api/razorpay/webhook/route";
+import { order, orderEvent } from "@/db/schema";
+import { db } from "@/lib/db/drizzle";
 
 const WEBHOOK_SECRET =
   process.env.RAZORPAY_WEBHOOK_SECRET || "dev_webhook_secret_placeholder";
