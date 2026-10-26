@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { eq, sql } from "drizzle-orm";
-import { user } from "../db/schema";
-import { auth } from "./auth";
-import { db } from "./db/drizzle";
+import { user } from "@/db/schema";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db/drizzle";
 
 async function main() {
   console.log("Auth config loaded");

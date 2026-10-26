@@ -5,10 +5,10 @@ import {
   collectionProduct,
   coupon,
   productVariant,
-} from "../db/schema";
-import { PRODUCTS } from "./catalog";
-import { db } from "./db/drizzle";
-import { getProduct, getProducts } from "./db/queries";
+} from "@/db/schema";
+import { PRODUCTS } from "@/lib/catalog";
+import { db } from "@/lib/db/drizzle";
+import { getProduct, getProducts } from "@/lib/db/queries";
 
 async function main() {
   console.log("=== Test 1: getProducts (all) ===");

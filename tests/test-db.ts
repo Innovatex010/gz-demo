@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { count } from "drizzle-orm";
-import { product, subscription, user } from "../db/schema";
-import { db } from "./db/drizzle";
+import { product, subscription, user } from "@/db/schema";
+import { db } from "@/lib/db/drizzle";
 
 async function main() {
   const userCount = (await db.select({ count: count() }).from(user))[0].count;

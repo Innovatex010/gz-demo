@@ -12,7 +12,8 @@
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "seed": "tsx src/lib/seed.ts"
+    "seed": "tsx src/lib/seed.ts",
+    "test": "bun tests/test-db.ts && bun tests/test-auth.ts && bun tests/test-api.ts && bun tests/test-webhook.ts && bun tests/test-addresses.ts"
   },
   "dependencies": {
     "@amank-root/better-auth-razorpay": "^1.2.0",
