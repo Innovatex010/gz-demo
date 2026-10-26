@@ -258,6 +258,8 @@ export const order = pgTable(
     paymentMethod: payMethodEnum("payment_method"),
     paymentStatus: payStatusEnum("payment_status").notNull().default("pending"),
     status: orderStatusEnum().notNull().default("pending"),
+    razorpayOrderId: text("razorpay_order_id"),
+    razorpayPaymentId: text("razorpay_payment_id"),
     coupon: text(),
     carrier: text(),
     tracking: text(),
@@ -266,6 +268,7 @@ export const order = pgTable(
   (table) => [
     index("order_customer_id_idx").on(table.customerId),
     index("order_placed_at_idx").on(table.placedAt),
+    index("order_razorpay_order_id_idx").on(table.razorpayOrderId),
   ],
 );
 

@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
         cod: body.cod ?? true,
         paymentMethod: body.cod ? "cod" : "upi",
         paymentStatus: body.cod ? "pending" : "pending",
+        razorpayOrderId: body.razorpayOrderId ?? null,
         coupon: body.coupon ?? null,
         totals: body.totals,
       })
